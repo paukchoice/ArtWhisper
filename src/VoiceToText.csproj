@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>ArtWhisper</AssemblyName>
+    <RootNamespace>ArtWhisper</RootNamespace>
+    <!-- icon.ico в репозитории нет (бинарник); сборка работает без него -->
+    <ApplicationIcon Condition="Exists('icon.ico')">icon.ico</ApplicationIcon>
+    <Version>1.4.0</Version>
+    <Description>Art Whisper — локальное распознавание речи (голосовой ввод текста)</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Whisper.net" Version="1.9.1" />
+    <PackageReference Include="Whisper.net.Runtime" Version="1.9.1" />
+  </ItemGroup>
+
+  <!-- Нативные библиотеки whisper.cpp для win-x64 (из Whisper.net.Runtime).
+       Явно добавляем как Content, чтобы гарантированно попали в single-file exe
+       с сохранением пути runtimes/win-x64, который ищет загрузчик Whisper.net. -->
+  <ItemGroup>
+    <Content Include="runtimes-win-x64\*.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>runtimes\win-x64\%(Filename)%(Extension)</TargetPath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('icon.ico')">
+    <EmbeddedResource Include="icon.ico" />
+  </ItemGroup>
+
+</Project>
